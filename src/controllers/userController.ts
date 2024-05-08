@@ -5,6 +5,8 @@ import { interfaces, controller, httpGet, httpPost, httpDelete, request, queryPa
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import verifyToken from '../middleware/authMiddleware'
+import { Err_CODES,Err_MESSAGES } from "../config/error";
+
 
 
 @controller("/users")
@@ -17,11 +19,11 @@ export class userController {
 
             const { username, password } = req.body;
             await this.userService.createUser(username, password);
-            res.status(200).send("User Created Successfully");
+            res.status(Err_CODES.CREATED).send("User Created Successfully");
         }
         catch (error) {
             console.log('Error while signUp');
-            res.status(500).json({ message: error })
+            res.status(Err_CODES.INTERNAL_SERVER_ERROR).json({ message: Err_MESSAGES.INTERNAL_SERVER_ERROR })
 
         }
     }
@@ -33,7 +35,7 @@ export class userController {
             const user: any = await this.userService.getUserByUsername(username);
 
             if (!user) {
-                res.status(401).json({ error: 'Authentication failed' });
+                res.status(Err_CODES.UNAUTHORIZED).json({ error: Err_MESSAGES.UNAUTHORIZED });
                 return
             }
 
@@ -44,11 +46,12 @@ export class userController {
                 return
             }
             const token = jwt.sign({ userId: user._id }, 'KushalP', { expiresIn: '1h' })
-            res.status(200).json({ token })
+            res.status(Err_CODES.SUCCESSED).json({ token })
         }
         catch (error) {
             console.error("Error logging in");
-            res.status(500).json({ message: error })
+            res.status(Err_CODES.INTERNAL_SERVER_ERROR).json({ message: Err_MESSAGES.INTERNAL_SERVER_ERROR })
+
         }
     }
 
@@ -56,10 +59,11 @@ export class userController {
     async getAllUsers(req: Request, res: Response): Promise<void> {
         try {
             const users = await this.userService.getAllUsers();
-            res.status(200).json(users);
+            res.status(Err_CODES.SUCCESSED).json(users);
         } catch (error) {
             console.error("Error retrieving users:", error);
-            res.status(500).send('Failed to retrieve users');
+            res.status(Err_CODES.INTERNAL_SERVER_ERROR).json({ message: Err_MESSAGES.INTERNAL_SERVER_ERROR })
+
         }
     }
 

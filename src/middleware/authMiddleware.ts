@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import CustomRequest from "../types/customRequest"; // Adjust the path as per your file structure
 import jwt from 'jsonwebtoken'
+import { Err_CODES,Err_MESSAGES } from "../config/error";
+
 
 async function verifyToken(req: CustomRequest, res: Response, next: NextFunction) {
     const token = req.headers.authorization?.split(' ')[1];
@@ -16,7 +18,7 @@ async function verifyToken(req: CustomRequest, res: Response, next: NextFunction
         
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Invalid token' });
+        res.status(Err_CODES.UNAUTHORIZED).json({ error: Err_MESSAGES.UNAUTHORIZED });
     }
 }
 
