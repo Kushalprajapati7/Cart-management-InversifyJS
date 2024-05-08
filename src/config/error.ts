@@ -18,6 +18,7 @@ export const Err_MESSAGES = {
     BAD_REQUEST: 'Bad request',
     SUCCESSED : 'Success',
     CREATED : 'Cretaed',
-    SESSIONEXPIRED: 'Session expired'
+    SESSIONEXPIRED: 'Session expired',
+    InvalidToken : 'Invalid token'
 
 };
