@@ -42,7 +42,7 @@ export class userController {
             const passwordMatch = await bcrypt.compare(password, user.password)
 
             if (!passwordMatch) {
-                res.status(401).json({ error: 'Authentication failed' });
+                res.status(Err_CODES.UNAUTHORIZED).json({ error: Err_MESSAGES.UNAUTHORIZED });
                 return
             }
             const token = jwt.sign({ userId: user._id }, 'KushalP', { expiresIn: '1h' })
